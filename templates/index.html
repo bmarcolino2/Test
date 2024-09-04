@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Doces</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Loja de Doces</h1>
+        <nav>
+            <button onclick="mostrarCatalogo()">Catálogo</button>
+            <button onclick="mostrarCarrinho()">Carrinho</button>
+        </nav>
+    </header>
+
+    <!-- Página do Catálogo -->
+    <section id="catalogo" class="pagina ativa">
+        <h2>Catálogo</h2>
+        <ul id="catalogo-list">
+            <li>
+                Mini Donut - R$ 10.00
+                <div class="opcoes">
+                    <form action="{{ url_for('adicionar_ao_carrinho') }}" method="post">
+                        <input type="hidden" name="nome" value="Mini Donut">
+                        <input type="hidden" name="preco" value="10.00">
+                        <label for="massa-1">Escolha a massa:</label>
+                        <select id="massa-1" name="massa">
+                            <option value="Tradicional">Tradicional</option>
+                            <option value="Chocolate">Chocolate</option>
+                            <option value="Baunilha">Baunilha</option>
+                        </select>
+
+                        <label for="cobertura-1">Escolha a cobertura:</label>
+                        <select id="cobertura-1" name="cobertura">
+                            <option value="Brigadeiro">Brigadeiro</option>
+                            <option value="Caramelo">Caramelo</option>
+                            <option value="Morango">Morango</option>
+                        </select>
+
+                        <label for="confeitos-1">Escolha os confeitos:</label>
+                        <select id="confeitos-1" name="confeitos">
+                            <option value="Granulado">Granulado</option>
+                            <option value="Confete">Confete</option>
+                            <option value="Coco Ralado">Coco Ralado</option>
+                        </select>
+                        
+                        <button type="submit">Adicionar ao Carrinho</button>
+                    </form>
+                </div>
+            </li>
+            <li>
+                Cookie - R$ 5.00
+                <div class="opcoes">
+                    <form action="{{ url_for('adicionar_ao_carrinho') }}" method="post">
+                        <input type="hidden" name="nome" value="Cookie">
+                        <input type="hidden" name="preco" value="5.00">
+                        <label for="massa-2">Escolha a massa:</label>
+                        <select id="massa-2" name="massa">
+                            <option value="Tradicional">Tradicional</option>
+                            <option value="Chocolate">Chocolate</option>
+                            <option value="Baunilha">Baunilha</option>
+                        </select>
+
+                        <label for="cobertura-2">Escolha a cobertura:</label>
+                        <select id="cobertura-2" name="cobertura">
+                            <option value="Brigadeiro">Brigadeiro</option>
+                            <option value="Caramelo">Caramelo</option>
+                            <option value="Morango">Morango</option>
+                        </select>
+
+                        <label for="confeitos-2">Escolha os confeitos:</label>
+                        <select id="confeitos-2" name="confeitos">
+                            <option value="Granulado">Granulado</option>
+                            <option value="Confete">Confete</option>
+                            <option value="Coco Ralado">Coco Ralado</option>
+                        </select>
+
+                        <button type="submit">Adicionar ao Carrinho</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Página do Carrinho -->
+    <section id="carrinho" class="pagina">
+        <h2>Carrinho</h2>
+        <ul id="carrinho-list">
+            {% for item in session.get('carrinho', []) %}
+            <li>
+                {{ item['nome'] }} - R$ {{ item['preco'] }}<br>
+                Massa: {{ item['massa'] }}<br>
+                Cobertura: {{ item['cobertura'] }}<br>
+                Confeitos: {{ item['confeitos'] }}<br>
+                <form action="{{ url_for('remover_item') }}" method="post" style="display:inline;">
+                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                    <button type="submit" class="delete-button">Remover</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <div id="total">
+            <h3>Total: R$ {{ '%0.2f' % (session.get('carrinho_total', 0)) }}</h3>
+        </div>
+        <footer>
+            <form action="{{ url_for('finalizar_pedido') }}" method="post">
+                <input type="text" id="whatsapp-number" name="whatsapp_number" placeholder="Número do WhatsApp">
+                <button type="submit">Finalizar Pedido</button>
+            </form>
+        </footer>
+    </section>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
